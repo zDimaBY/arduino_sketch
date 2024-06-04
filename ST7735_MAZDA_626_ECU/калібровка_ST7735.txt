@@ -1,0 +1,26 @@
+У каталозі бібліотеки Adafruit ST7735 є файл Adafruit_ST77xx.cpp і в ньому функція
+
+void Adafruit_ST77xx::setAddrWindow(uint16_t x, uint16_t y, uint16_t w,
+  uint16_t h) {
+  x += _xstart;
+  y += _ystart;
+  uint32_t xa = ((uint32_t)x << 16) | (x+w-1);
+  uint32_t ya = ((uint32_t)y << 16) | (y+h-1); 
+ 
+  writeCommand(ST77XX_CASET); // Column addr set
+  SPI_WRITE32(xa);
+ 
+  writeCommand(ST77XX_RASET); // Row addr set
+  SPI_WRITE32(ya);
+ 
+  writeCommand(ST77XX_RAMWR); // write to RAM
+}
+ 
+ 
+відповідно потрібно плюсувати зсув у рядках
+  x += _xstart;
+  y += _ystart;
+ 
+якщо потрібно зрушити екран на два вправо і три вниз (у мене таке усунення), то правимо так
+  x += _xstart+2;
+  y += _ystart+3;
