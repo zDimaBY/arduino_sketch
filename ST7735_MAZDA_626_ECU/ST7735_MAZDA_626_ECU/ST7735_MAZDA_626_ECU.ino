@@ -1,18 +1,17 @@
-#include <Adafruit_GFX.h>    // Core graphics library
-#include <Adafruit_ST7735.h> // Hardware-specific library
-//#include "FontsRus/CrystalNormal6.h"
+#include <Adafruit_GFX.h>    // Основна графічна бібліотека
+#include <Adafruit_ST7735.h> // Спеціальна бібліотека апаратного забезпечення
 #include <SPI.h>
 #include <microDS18B20.h>
 
-#define ONE_WIRE_BUS 2 // Data wire is plugged into port 2 on the Arduino
+#define ONE_WIRE_BUS 2 // Провід даних підключено до порту 2 на Arduino
 #define DS_SENSOR_AMOUNT 1 //кількість датчиків
-//для иницилизации ТФТ
+//для ініцілізація ТФТ
 #define TFT_SCLK 13
 #define TFT_MOSI 11
 #define TFT_CS   10
 #define TFT_RES  9
 #define TFT_RS   8
-#define TFT_BL_BACKLIGHT 3 //Регулыровка якркості
+#define TFT_BL_BACKLIGHT 3 //Регулювання якркості
 
 #define PIN_RELAY 5 //Курування реле машини
 #define PIN_RELAY1 4
@@ -38,7 +37,7 @@ uint8_t addr[][8] = {
 void setup(void) {
   //Serial.begin(115200);
   pinMode(TFT_BL_BACKLIGHT, OUTPUT);
-  analogWrite(TFT_BL_BACKLIGHT, 0); //подсветка ТФТ
+  analogWrite(TFT_BL_BACKLIGHT, 0); //підсвічування TFT
   pinMode(PIN_RELAY, OUTPUT); // канал реле 1
   pinMode(PIN_RELAY1, OUTPUT); // канал реле 2
   digitalWrite(PIN_RELAY, HIGH);
@@ -47,7 +46,7 @@ void setup(void) {
     sensor[i].setAddress(addr[i]);
   }
   //tft.setFont(&CrystalNormal6pt8b);
-  tft.initR(INITR_BLACKTAB);   // initialize a ST7735S chip, black tab
+  tft.initR(INITR_BLACKTAB);   // ініціалізація мікросхеми ST7735S, чорна вкладка
   tft.cp437(true);
   tft.fillScreen(ST77XX_BLACK);
   for (byte i = 0; i < 100; i++) {
@@ -83,8 +82,8 @@ void D18B20() {
   if (TempD18B20 <= 80) {
     digitalWrite(PIN_RELAY, HIGH);
   }
-  relayStartEngine();//таймер выключение свечей
-  TFTLSD();//Вывод температуры на дисплей
+  relayStartEngine();//таймер вимкнення свічок
+  TFTLSD();//Виведення температури на дисплей
 }
 void TFTLSD() {
   uint32_t sec = millis() / 1000ul;
@@ -94,37 +93,37 @@ void TFTLSD() {
   //tft.fillScreen(ST77XX_BLACK);
   tft.setTextColor(ST77XX_WHITE, ST77XX_BLACK);
   tft.setCursor(10, 0);
-  tft.print(utf8rus2("Темп.Двиг."));
+  tft.print(utf8ua("Темп.Двиг."));
   tft.print(TempD18B20);
   tft.print("\xB0  ");
   if (digitalRead(PIN_RELAY) == 0) {
     tft.setCursor(10, 10);
     tft.setTextColor(ST77XX_RED, ST77XX_BLACK);
-    tft.print(utf8rus2("Вент.ON "));
+    tft.print(utf8ua("Вент.ON "));
     tft.setTextColor(ST77XX_WHITE, ST77XX_BLACK);
   } else {
     tft.setCursor(10, 10);
     tft.setTextColor(ST77XX_GREEN, ST77XX_BLACK);
-    tft.print(utf8rus2("Вент.OFF"));
+    tft.print(utf8ua("Вент.OFF"));
     tft.setTextColor(ST77XX_WHITE, ST77XX_BLACK);
   }
   if (digitalRead(PIN_RELAY1) == 1) {
     tft.setCursor(10, 20);
     tft.setTextColor(ST77XX_GREEN, ST77XX_BLACK);
-    tft.print(utf8rus2("Свiчки:OFF"));
+    tft.print(utf8ua("Свiчки:OFF"));
     tft.setTextColor(ST77XX_WHITE, ST77XX_BLACK);
   } else {
     timerStarIntOled = (timerStar - millis()) / 1000;
     tft.setCursor(10, 20);
     tft.setTextColor(ST77XX_RED, ST77XX_BLACK);
-    tft.print(utf8rus2("Свiчки:"));
+    tft.print(utf8ua("Свiчки:"));
     tft.print(timerStarIntOled);
     tft.print("   ");
     tft.setTextColor(ST77XX_WHITE, ST77XX_BLACK);
   }
   voltmeter();
   tft.setCursor(10, 140);
-  tft.print(utf8rus2("активнiсть:"));
+  tft.print(utf8ua("активнiсть:"));
   tft.setTextColor(ST77XX_MAGENTA, ST77XX_BLACK);
   tft.setCursor(10, 150);
   tft.print(timeHours);
@@ -187,7 +186,7 @@ void voltmeter() {
   } else {
     tft.setTextColor(ST77XX_GREEN, ST77XX_BLACK);
   }
-  tft.print(utf8rus2("АКБ:"));
+  tft.print(utf8ua("АКБ:"));
   tft.print(voltage, 2);
   tft.print("   ");
   tft.setTextColor(ST77XX_WHITE, ST77XX_BLACK);
@@ -198,9 +197,9 @@ void startTFTcar() {
   tft.setCursor(50, 65);
   tft.print("626 GD");
   tft.setCursor(37, 80);
-  tft.print(utf8rus2("запалення"));
+  tft.print(utf8ua("запалення"));
   tft.setCursor(37, 90);
-  tft.print(utf8rus2("увiмкнуте"));
+  tft.print(utf8ua("увiмкнуте"));
   uint16_t color = 100;
   int i;
   int t;
